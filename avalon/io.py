@@ -14,7 +14,8 @@ from . import schema, Session
 from .vendor import requests
 
 # Third-party dependencies
-import pymongo
+# import pymongo
+import montydb
 from bson.objectid import ObjectId, InvalidId
 
 __all__ = [
@@ -55,8 +56,7 @@ def install():
     Session.update(_from_environment())
 
     timeout = int(Session["AVALON_TIMEOUT"])
-    self._mongo_client = pymongo.MongoClient(
-        Session["AVALON_MONGO"], serverSelectionTimeoutMS=timeout)
+    self._mongo_client = connect_montyDB_flatfile()
 
     for retry in range(3):
         try:
@@ -108,6 +108,20 @@ def _install_sentry():
     self._sentry_client = client
     self._sentry_logging_handler = handler
     log.info("Connected to Sentry @ %s" % Session["AVALON_SENTRY"])
+
+
+def connect_montyDB_flatfile():
+    montydb.set_storage(
+        repository=Session["AVALON_MONGO"],
+        storage="flatfile",
+        mongo_version="4.0",
+        use_bson=False,
+        # cache_modified=10
+    )
+    client = montydb.MontyClient(Session["AVALON_MONGO"])
+    log.info("Connected to MontyDB flat-file database %s" % (Session["AVALON_MONGO"]))
+    return client
+
 
 
 def _from_environment():

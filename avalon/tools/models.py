@@ -398,7 +398,9 @@ class AssetModel(TreeModel):
 
         silos = None
         if lib.project_use_silo(project_doc):
-            silos = db_assets.distinct("silo")
+            # silos = db_assets.distinct("silo")
+            silos = ["ASSETS", "SHOTS"]
+            log.warning("KS - Bypassing silo check")
 
         # Group the assets by their visual parent's id
         assets_by_parent = collections.defaultdict(list)
