@@ -33,11 +33,7 @@ def create_asset(data, silo_required):
     if project is None:
         raise RuntimeError("Project must exist prior to creating assets")
 
-    # Use asset schema 2.0 when silo is required
-    if silo_required:
-        schema_name = "avalon-core:asset-2.0"
-    else:
-        schema_name = "avalon-core:asset-3.0"
+    schema_name = "avalon-core:asset-3.0"
 
     asset = {
         "schema": schema_name,

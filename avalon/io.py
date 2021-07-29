@@ -14,7 +14,7 @@ from . import schema, Session
 from .vendor import requests
 
 # Third-party dependencies
-import montydb
+import pymongo
 from bson.objectid import ObjectId, InvalidId
 
 __all__ = [
@@ -85,6 +85,18 @@ def install():
     self._is_installed = True
 
 
+def uninstall():
+    """Close any connection to the database"""
+    try:
+        self._mongo_client.close()
+    except AttributeError:
+        pass
+
+    self._mongo_client = None
+    self._database = None
+    self._is_installed = False
+
+
 # def _install_sentry():
 #     if "AVALON_SENTRY" not in Session:
 #         return
@@ -114,8 +126,8 @@ def _from_environment():
     session = {
         item[0]: os.getenv(item[0], item[1])
         for item in (
-            # Root directory of projects on disk
-            ("AVALON_PROJECTS", None),
+            # # Root directory of projects on disk
+            # ("AVALON_PROJECTS", None),
 
             # Name of current Project
             ("AVALON_PROJECT", None),
@@ -153,7 +165,7 @@ def _from_environment():
             # Name of Avalon in graphical user interfaces
             # Use this to customise the visual appearance of Avalon
             # to better integrate with your surrounding pipeline
-            ("AVALON_LABEL", "Avalon"),
+            ("AVALON_LABEL", "AvalonKS"),
 
             # Used during any connections to the outside world
             ("AVALON_TIMEOUT", "1000"),
@@ -162,7 +174,7 @@ def _from_environment():
             ("AVALON_MONGO", "mongodb://localhost:27017"),
 
             # Name of database used in MongoDB
-            ("AVALON_DB", "avalon"),
+            ("AVALON_DB", "avalonKS"),
 
             # Address to Sentry
             ("AVALON_SENTRY", None),
@@ -209,19 +221,10 @@ def _from_environment():
     return session
 
 
-def uninstall():
-    """Close any connection to the database"""
-    try:
-        self._mongo_client.close()
-    except AttributeError:
-        pass
-
-    self._mongo_client = None
-    self._database = None
-    self._is_installed = False
 
 
 def requires_install(f):
+    """Check if database client is installed."""
     @functools.wraps(f)
     def decorated(*args, **kwargs):
         if not self._is_installed:
@@ -251,11 +254,6 @@ def auto_reconnect(f):
 def active_project():
     """Return the name of the active project"""
     return Session["AVALON_PROJECT"]
-
-
-def activate_project(project):
-    """Establish a connection to a given collection within the database"""
-    print("io.activate_project is deprecated")
 
 
 @requires_install
@@ -416,6 +414,7 @@ def delete_many(*args, **kwargs):
 
 
 def parenthood(document):
+    """Recursively find the parent hierarchy of a document."""
     assert document is not None, "This is a bug"
 
     parents = list()
@@ -439,55 +438,55 @@ def tempdir():
     finally:
         shutil.rmtree(tempdir)
 
-
-def download(src, dst):
-    """Download `src` to `dst`
-
-    Arguments:
-        src (str): URL to source file
-        dst (str): Absolute path to destination file
-
-    Yields tuple (progress, error):
-        progress (int): Between 0-100
-        error (Exception): Any exception raised when first making connection
-
-    """
-
-    try:
-        response = requests.get(
-            src,
-            stream=True,
-            auth=requests.auth.HTTPBasicAuth(
-                Session["AVALON_USERNAME"],
-                Session["AVALON_PASSWORD"]
-            )
-        )
-    except requests.ConnectionError as e:
-        yield None, e
-        return
-
-    with tempdir() as dirname:
-        tmp = os.path.join(dirname, os.path.basename(src))
-
-        with open(tmp, "wb") as f:
-            total_length = response.headers.get("content-length")
-
-            if total_length is None:  # no content length header
-                f.write(response.content)
-            else:
-                downloaded = 0
-                total_length = int(total_length)
-                for data in response.iter_content(chunk_size=4096):
-                    downloaded += len(data)
-                    f.write(data)
-
-                    yield int(100.0 * downloaded / total_length), None
-
-        try:
-            os.makedirs(os.path.dirname(dst))
-        except OSError as e:
-            # An already existing destination directory is fine.
-            if e.errno != errno.EEXIST:
-                raise
-
-        shutil.copy(tmp, dst)
+#
+# def download(src, dst):
+#     """Download `src` to `dst`
+#
+#     Arguments:
+#         src (str): URL to source file
+#         dst (str): Absolute path to destination file
+#
+#     Yields tuple (progress, error):
+#         progress (int): Between 0-100
+#         error (Exception): Any exception raised when first making connection
+#
+#     """
+#
+#     try:
+#         response = requests.get(
+#             src,
+#             stream=True,
+#             auth=requests.auth.HTTPBasicAuth(
+#                 Session["AVALON_USERNAME"],
+#                 Session["AVALON_PASSWORD"]
+#             )
+#         )
+#     except requests.ConnectionError as e:
+#         yield None, e
+#         return
+#
+#     with tempdir() as dirname:
+#         tmp = os.path.join(dirname, os.path.basename(src))
+#
+#         with open(tmp, "wb") as f:
+#             total_length = response.headers.get("content-length")
+#
+#             if total_length is None:  # no content length header
+#                 f.write(response.content)
+#             else:
+#                 downloaded = 0
+#                 total_length = int(total_length)
+#                 for data in response.iter_content(chunk_size=4096):
+#                     downloaded += len(data)
+#                     f.write(data)
+#
+#                     yield int(100.0 * downloaded / total_length), None
+#
+#         try:
+#             os.makedirs(os.path.dirname(dst))
+#         except OSError as e:
+#             # An already existing destination directory is fine.
+#             if e.errno != errno.EEXIST:
+#                 raise
+#
+#         shutil.copy(tmp, dst)

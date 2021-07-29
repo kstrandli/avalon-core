@@ -97,14 +97,17 @@ def create_project(name):
     if io.find_one({"type": "project", "name": name}):
         raise RuntimeError("%s already exists" % name)
 
-    return io.insert_one({
+    project = {
         "schema": "avalon-core:project-2.0",
         "type": "project",
         "name": name,
         "data": dict(),
         "config": DEFAULTS["config"],
         "parent": None,
-    }).inserted_id
+    }
+    project_id = io.insert_one(project).inserted_id
+
+    return project_id
 
 
 def create_asset(name, silo, data, parent):
