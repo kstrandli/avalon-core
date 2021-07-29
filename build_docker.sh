@@ -1,1 +1,0 @@
-docker build -t avalon/core:maya -f Dockerfile-maya2016 .

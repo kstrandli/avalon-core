@@ -14,7 +14,7 @@ from . import schema, Session
 from .vendor import requests
 
 # Third-party dependencies
-import pymongo
+import montydb
 from bson.objectid import ObjectId, InvalidId
 
 __all__ = [
@@ -79,35 +79,35 @@ def install():
     log.info("Connected to %s, delay %.3f s" % (
         Session["AVALON_MONGO"], time.time() - t1))
 
-    _install_sentry()
+    # _install_sentry()
 
     self._database = self._mongo_client[Session["AVALON_DB"]]
     self._is_installed = True
 
 
-def _install_sentry():
-    if "AVALON_SENTRY" not in Session:
-        return
-
-    try:
-        from raven import Client
-        from raven.handlers.logging import SentryHandler
-        from raven.conf import setup_logging
-    except ImportError:
-        # Note: There was a Sentry address in this Session
-        return log.warning("Sentry disabled, raven not installed")
-
-    client = Client(Session["AVALON_SENTRY"])
-
-    # Transmit log messages to Sentry
-    handler = SentryHandler(client)
-    handler.setLevel(logging.WARNING)
-
-    setup_logging(handler)
-
-    self._sentry_client = client
-    self._sentry_logging_handler = handler
-    log.info("Connected to Sentry @ %s" % Session["AVALON_SENTRY"])
+# def _install_sentry():
+#     if "AVALON_SENTRY" not in Session:
+#         return
+#
+#     try:
+#         from raven import Client
+#         from raven.handlers.logging import SentryHandler
+#         from raven.conf import setup_logging
+#     except ImportError:
+#         # Note: There was a Sentry address in this Session
+#         return log.warning("Sentry disabled, raven not installed")
+#
+#     client = Client(Session["AVALON_SENTRY"])
+#
+#     # Transmit log messages to Sentry
+#     handler = SentryHandler(client)
+#     handler.setLevel(logging.WARNING)
+#
+#     setup_logging(handler)
+#
+#     self._sentry_client = client
+#     self._sentry_logging_handler = handler
+#     log.info("Connected to Sentry @ %s" % Session["AVALON_SENTRY"])
 
 
 def _from_environment():
