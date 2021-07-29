@@ -9,14 +9,21 @@ log = logging.getLogger(__name__)
 def runTest():
     host = pipeline.debug_host()
     api.install(host)
-    projectName = "20210130_MyTestProject"
+    projectPath = "D:/Dropbox/PipelineProjectExamples/PipelineDummyProjects/002_projectB"
+    projectPath = "D:/Dropbox/PipelineProjectExamples/PipelineDummyProjects/001_projectA"
+    projectPath = "D:/Dropbox/PipelineProjectExamples/PipelineDummyProjects/003_projectC"
+
+    # projectRepo = "D:/Dropbox/PipelineProjectExamples/PipelineDummyProjects"
+    # projectRoot = inventory.project_create(projectRepo, "003_ProjectC", "ProjectC")
+    # print(projectRoot)
+    # projectName = "20210130_MyTestProject"
     # inventory.create_project(projectName)
     # inventory.init(projectName)
-    inventory.load(projectName)
+    inventory.load(projectPath)
 
 
     # projectmanager.show()
-    workfiles.show()
+    # workfiles.show()
 
 if __name__ == '__main__':
     os.environ["AVALON_PROJECT"] = "002_projectB"
