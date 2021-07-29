@@ -2,38 +2,12 @@
   <img align="center" src=https://user-images.githubusercontent.com/2152766/27429443-fefb534e-573c-11e7-8b0d-6b99ff1d9870.png>
 </p>
 <p align="center">
-  The safe post-production pipeline
+  Modified version of Avalon-Core for personal pipeline. Aims to be portable and less reliant on database.
 </p>
 
 [![Build Status](https://travis-ci.org/getavalon/core.svg?branch=master)](https://travis-ci.org/getavalon/core) [![Coverage Status](https://coveralls.io/repos/github/getavalon/core/badge.svg?branch=master)](https://coveralls.io/github/getavalon/core?branch=master)
 
-- [Documentation](https://getavalon.github.io)
-- [Installation](https://getavalon.github.io/2.0/guides/#install)
 
-<br>
-
-### Testing
-
-```bash
-$ cd avalon-core
-
-# One-time build and database
-$ docker run --name avalon-mongo -d mongo
-$ . build_docker.sh
-
-# Run
-$ . test_docker.sh
-```
-
-<br>
-
-### Contributing
-
-See [CONTRIBUTING.md](https://github.com/getavalon/core/blob/master/CONTRIBUTING.md) for a summary of guidelines for how you can contribute to Avalon.
-
-Also visit [the chat](https://gitter.im/getavalon/Lobby) for a direct connection with current developers.
-
-<br>
 
 ### Code convention
 
