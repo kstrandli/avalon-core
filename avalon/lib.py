@@ -14,10 +14,11 @@ from .vendor import six, toml
 
 PY2 = sys.version_info[0] == 2
 
-log_ = logging.getLogger(__name__)
-
 # Backwards compatibility
+
+log_ = logging.getLogger(__name__)
 logger = log_
+
 
 __all__ = [
     "time",
@@ -32,7 +33,6 @@ def time():
 
 def log(cls):
     """Decorator for attaching a logger to the class `cls`
-
     Loggers inherit the syntax {module}.{submodule}
 
     Example

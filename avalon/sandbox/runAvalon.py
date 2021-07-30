@@ -19,16 +19,16 @@ def runTest():
     # projectName = "20210130_MyTestProject"
     # inventory.create_project(projectName)
     # inventory.init(projectName)
-    inventory.load(projectPath)
+    inventory.project_load(projectPath)
 
 
     # projectmanager.show()
     # workfiles.show()
 
 if __name__ == '__main__':
-    os.environ["AVALON_PROJECT"] = "002_projectB"
-    os.environ["AVALON_SILO"] = "ASSETS"
-    os.environ["AVALON_CONFIG"] = "robotparty"
-    os.environ["AVALON_TASK"] = "mdl"
-    os.environ["AVALON_APP"] = "maya"
+    # os.environ["AVALON_CONFIG"] = "robotparty"
+    # os.environ["AVALON_PROJECT"] = "002_projectB"
+    # os.environ["AVALON_SILO"] = "ASSETS"
+    # os.environ["AVALON_TASK"] = "mdl"
+    # os.environ["AVALON_APP"] = "maya"
     runTest()

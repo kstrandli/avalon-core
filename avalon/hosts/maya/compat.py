@@ -38,11 +38,7 @@ def install():
         remove_googleapiclient()
 
 
-def load(Loader,
-         representation,
-         name=None,
-         namespace=None,
-         data=None):
+def load(Loader, representation, name=None, namespace=None, data=None):
     """Load asset via database
 
     Deprecated; this functionality is replaced by `api.load()`
@@ -101,7 +97,6 @@ def load(Loader,
 
     try:
         loader = Loader(context)
-
         with lib.maintained_selection():
             loader.process(name, namespace, context, data)
 

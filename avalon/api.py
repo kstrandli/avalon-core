@@ -11,33 +11,35 @@ and likely **unreliable** for use outside of the codebase itself.
 
 from . import schema
 
+from .callbacks import (
+    on,
+    after,
+    before,
+    emit,
+)
+
+from .launcher import (
+    Application,
+)
+
 from .pipeline import (
     install,
     uninstall,
+
+    Session,
 
     Loader,
     Creator,
     Action,
     InventoryAction,
-    Application,
+
     discover,
-    Session,
-
-    # Deprecated
-    Session as session,
-
-    on,
-    after,
-    before,
-    emit,
-
     publish,
     create,
     load,
     update,
     switch,
     remove,
-
     data,
 
     update_current_task,
@@ -45,15 +47,16 @@ from .pipeline import (
     loaders_from_representation,
 
     register_root,
-    register_host,
-    register_plugin_path,
-    register_plugin,
-
-    registered_host,
-    registered_config,
-    registered_plugin_paths,
     registered_root,
 
+    register_host,
+    registered_host,
+
+    registered_config,
+
+    register_plugin_path,
+    register_plugin,
+    registered_plugin_paths,
     deregister_plugin,
     deregister_plugin_path,
 )
@@ -77,7 +80,6 @@ __all__ = [
     "Application",
     "discover",
     "Session",
-    "session",
 
     "on",
     "after",
